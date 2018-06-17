@@ -9048,14 +9048,6 @@ module.exports = function (regExp, replace) {
 "use strict";
 
 
-//Utils
-if (typeof Array.isArray === 'undefined') {
-    Array.isArray = function (obj) {
-        return Object.prototype.toString.call(obj) === '[object Array]';
-    };
-};
-
-//Library
 window.form = function () {
     var inputsObj = null;
     var inputsCreated = [];
@@ -9114,7 +9106,7 @@ window.form = function () {
         var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
         if (!attrs.hasOwnProperty("id") && index !== null) {
-            attrs.id = attrs.hasOwnProperty("class") ? attrs.class + '-' + (index + 1) : index + 1;
+            attrs.id = attrs.hasOwnProperty("class") ? attrs.class + "-" + (index + 1) : index + 1;
         }
 
         Object.keys(attrs).forEach(function (key) {

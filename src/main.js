@@ -1,11 +1,3 @@
-//Utils
-if (typeof Array.isArray === 'undefined') {
-    Array.isArray = function(obj) {
-        return Object.prototype.toString.call(obj) === '[object Array]';
-    }
-};
-
-//Library
 window.form = (function() {
     var inputsObj = null;
     var inputsCreated = [];
