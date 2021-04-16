@@ -119,15 +119,17 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"main.js":[function(require,module,exports) {
 window.form = function () {
-  var inputsObj = null;
-  var inputsCreated = [];
+  var fieldsList = null;
+  var fieldsCreated = [];
   var formReady = false;
   var formObj = {
-    form: createElement("form")
+    form: createElement({
+      element: 'form'
+    })
   };
 
   function init(callback) {
-    if (inputsObj === null) {
+    if (fieldsList === null) {
       return;
     }
 
@@ -136,42 +138,41 @@ window.form = function () {
   }
 
   function checkInput() {
-    if (inputsObj.length) {
-      inputsObj.map(function (obj, index) {
-        createElement("input", index, obj);
+    if (fieldsList.length) {
+      fieldsList.map(function (obj, index) {
+        createElement(obj, index);
       });
     } else {
-      console.warn("No inputs entered");
+      console.error("No inputs entered");
     }
 
-    if (inputsCreated.length) {
-      appendToForm();
+    if (fieldsCreated.length) {
+      appendFieldsToForm();
       formReady = true;
     }
   }
 
-  function appendToForm() {
-    inputsCreated.map(function (input) {
+  function appendFieldsToForm() {
+    fieldsCreated.map(function (input) {
       formObj.form.appendChild(input);
     });
   }
 
-  function createElement(tag, index) {
-    var obj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    var element = document.createElement(tag);
+  function createElement(elementObj, index) {
+    var element = document.createElement(elementObj.element);
 
-    if (obj !== null) {
-      setAttributes(obj, element, index);
+    if (elementObj.attrs) {
+      setElementAttributes(elementObj.attrs, element, index);
     }
 
-    if (tag && tag === "input") {
-      inputsCreated.push(element);
+    if (elementObj.element !== 'form') {
+      fieldsCreated.push(element);
     }
 
     return element;
   }
 
-  function setAttributes(attrs, el) {
+  function setElementAttributes(attrs, el) {
     var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
     if (!attrs.hasOwnProperty("id") && index !== null) {
@@ -184,37 +185,50 @@ window.form = function () {
   }
 
   return {
-    createForm: function createForm(inputs) {
+    createForm: function createForm(fields) {
       var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      inputsObj = inputs;
+      fieldsList = fields;
       init(callback);
 
       if (formReady) {
+        document.getElementById("form-wrap").appendChild(formObj.form);
         return formObj;
       } else {
-        console.error("There was an error creating the form");
+        console.error("There was an error creating the form.");
       }
     }
   };
 }();
 
 function prueba(form) {
-  console.log("probando callback", form.form);
+  console.log("probando callback", form);
 }
 
 window.form.createForm([{
-  class: "prueba",
-  type: "text",
-  name: "user",
-  id: "campo_nombre",
-  required: true
+  element: "input",
+  attrs: {
+    class: "prueba",
+    type: "text",
+    name: "username",
+    id: "username",
+    placeholder: "User name"
+  }
 }, {
-  type: "email",
-  name: "email",
-  id: "campo_email"
+  element: "input",
+  attrs: {
+    class: "prueba",
+    type: "password",
+    name: "password",
+    id: "password",
+    placeholder: "Password"
+  }
 }, {
-  type: "submit",
-  value: "Submit"
+  element: "input",
+  attrs: {
+    class: "prueba",
+    title: "Submit",
+    type: "submit"
+  }
 }], prueba);
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -244,7 +258,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55587" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56160" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

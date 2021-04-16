@@ -1,13 +1,13 @@
 window.form = (function() {
-    var inputsObj = null;
-    var inputsCreated = [];
-    var formReady = false;
-    var formObj = {
-        form: createElement("form")
+    let fieldsList = null;
+    let fieldsCreated = [];
+    let formReady = false;
+    let formObj = {
+        form: createElement({ element: 'form' })
     }
 
     function init(callback) {
-        if (inputsObj === null) {
+        if (fieldsList === null) {
             return;
         }
 
@@ -16,40 +16,40 @@ window.form = (function() {
     }
 
     function checkInput() {
-        if (inputsObj.length) {
-            inputsObj.map((obj, index) => { createElement("input", index, obj); });
+        if (fieldsList.length) {
+            fieldsList.map((obj, index) => { createElement(obj, index); });
         } else {
-            console.warn("No inputs entered");
+            console.error("No inputs entered");
         }
 
-        if (inputsCreated.length) {
-            appendToForm();
+        if (fieldsCreated.length) {
+            appendFieldsToForm();
             formReady = true;
         }
     }
 
-    function appendToForm() {
-        inputsCreated.map((input) => {
+    function appendFieldsToForm() {
+        fieldsCreated.map((input) => {
             formObj.form.appendChild(input);
         });
     }
 
-    function createElement(tag, index, obj = null) {
-        var element = document.createElement(tag);
+    function createElement(elementObj, index) {
+        let element = document.createElement(elementObj.element);
 
-        if (obj !== null) {
-            setAttributes(obj, element, index)
+        if (elementObj.attrs) {
+            setElementAttributes(elementObj.attrs, element, index)
         }
         
-        if (tag && tag === "input") {
-            inputsCreated.push(element);
+        if (elementObj.element !== 'form') {
+            fieldsCreated.push(element);
         }
-        
+
         return element;
                 
     }
 
-    function setAttributes(attrs, el, index = null) {
+    function setElementAttributes(attrs, el, index = null) {
         if (!attrs.hasOwnProperty("id") && index !== null) {
             attrs.id = attrs.hasOwnProperty("class") ? `${attrs.class}-${index + 1}` : index + 1;
         }
@@ -61,14 +61,15 @@ window.form = (function() {
     }
     
     return {
-        createForm: function(inputs, callback = null) {
-            inputsObj = inputs;
+        createForm: function(fields, callback = null) {
+            fieldsList = fields;
             init(callback);
 
             if (formReady) {
+                document.getElementById("form-wrap").appendChild(formObj.form);
                 return formObj;
             } else {
-                console.error("There was an error creating the form");
+                console.error("There was an error creating the form.");
             }
         }
     }
@@ -77,7 +78,29 @@ window.form = (function() {
 
 
 function prueba(form) {
-    console.log("probando callback", form.form)
+    console.log("probando callback", form)
 }
 
-window.form.createForm([{class:"prueba", type: "text", name: "user", id: "campo_nombre", required: true}, {type: "email", name: "email", id: "campo_email"}, {type: "submit", value: "Submit"}], prueba)
+window.form.createForm(
+    [
+        {
+            element: "input", 
+            attrs: {
+                class: "prueba", type: "text", name: "username", id: "username", placeholder: "User name"
+            }
+        },
+        {
+            element: "input", 
+            attrs: {
+                class: "prueba", type: "password", name: "password", id: "password", placeholder: "Password"
+            }
+        },
+        {
+            element: "input",
+            attrs: {
+                class: "prueba", title: "Submit", type: "submit"
+            }
+        }
+    ],
+    prueba
+);
