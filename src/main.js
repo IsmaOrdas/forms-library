@@ -37,12 +37,12 @@ window.form = (function() {
     function createElement(elementObj, index) {
         let element = document.createElement(elementObj.element);
 
-        if (elementObj.attrs) {
-            setElementAttributes(elementObj.attrs, element, index)
-        }
-        
         if (elementObj.element !== 'form') {
             fieldsCreated.push(element);
+        }
+
+        if (elementObj.attrs) {
+            setElementAttributes(elementObj.attrs, element, index)
         }
 
         return element;
@@ -54,31 +54,28 @@ window.form = (function() {
             attrs.id = attrs.hasOwnProperty("class") ? `${attrs.class}-${index + 1}` : index + 1;
         }
 
-        Object.keys(attrs).forEach((key) => {
-            return el.setAttribute(key, attrs[key]);
-        });
+        Object.keys(attrs).forEach((key) => el.setAttribute(key, attrs[key]));
 
     }
     
     return {
-        createForm: function(fields, callback = null) {
+        createForm: function(fields, htmlSelector, callback = null) {
             fieldsList = fields;
             init(callback);
 
-            if (formReady) {
-                document.getElementById("form-wrap").appendChild(formObj.form);
-                return formObj;
-            } else {
+            if (!formReady) {
                 console.error("There was an error creating the form.");
             }
+            
+            document.querySelector(htmlSelector).appendChild(formObj.form);
         }
     }
 
 })();
 
 
-function prueba(form) {
-    console.log("probando callback", form)
+function callbackTest(form) {
+    console.log('Form created');
 }
 
 window.form.createForm(
@@ -86,21 +83,22 @@ window.form.createForm(
         {
             element: "input", 
             attrs: {
-                class: "prueba", type: "text", name: "username", id: "username", placeholder: "User name"
+                class: "input-field", type: "text", name: "username", id: "username", placeholder: "User name"
             }
         },
         {
             element: "input", 
             attrs: {
-                class: "prueba", type: "password", name: "password", id: "password", placeholder: "Password"
+                class: "input-field", type: "password", name: "password", id: "password", placeholder: "Password"
             }
         },
         {
             element: "input",
             attrs: {
-                class: "prueba", title: "Submit", type: "submit"
+                class: "input-field", title: "Submit", type: "submit"
             }
         }
     ],
-    prueba
+    '#form-wrap',
+    callbackTest
 );

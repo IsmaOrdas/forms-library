@@ -161,12 +161,12 @@ window.form = function () {
   function createElement(elementObj, index) {
     var element = document.createElement(elementObj.element);
 
-    if (elementObj.attrs) {
-      setElementAttributes(elementObj.attrs, element, index);
-    }
-
     if (elementObj.element !== 'form') {
       fieldsCreated.push(element);
+    }
+
+    if (elementObj.attrs) {
+      setElementAttributes(elementObj.attrs, element, index);
     }
 
     return element;
@@ -185,29 +185,28 @@ window.form = function () {
   }
 
   return {
-    createForm: function createForm(fields) {
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    createForm: function createForm(fields, htmlSelector) {
+      var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       fieldsList = fields;
       init(callback);
 
-      if (formReady) {
-        document.getElementById("form-wrap").appendChild(formObj.form);
-        return formObj;
-      } else {
+      if (!formReady) {
         console.error("There was an error creating the form.");
       }
+
+      document.querySelector(htmlSelector).appendChild(formObj.form);
     }
   };
 }();
 
-function prueba(form) {
-  console.log("probando callback", form);
+function callbackTest(form) {
+  console.log('Form created');
 }
 
 window.form.createForm([{
   element: "input",
   attrs: {
-    class: "prueba",
+    class: "input-field",
     type: "text",
     name: "username",
     id: "username",
@@ -216,7 +215,7 @@ window.form.createForm([{
 }, {
   element: "input",
   attrs: {
-    class: "prueba",
+    class: "input-field",
     type: "password",
     name: "password",
     id: "password",
@@ -225,11 +224,11 @@ window.form.createForm([{
 }, {
   element: "input",
   attrs: {
-    class: "prueba",
+    class: "input-field",
     title: "Submit",
     type: "submit"
   }
-}], prueba);
+}], '#form-wrap', callbackTest);
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -258,7 +257,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56160" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49811" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
